@@ -8,7 +8,114 @@ var districts = FakeData.GetDistricts();
 var Standards = FakeData.GetStandard();
 var students = FakeData.GetStudents();
 
+//10. Display Student Information whose have the same districts and state name
+
+//var studInfo = from s in students
+//               join dist in districts
+//               on s.DistrictId equals dist.DistrictId
+//               join state in States
+//               on s.StateId equals state.StateId
+//               group s by new
+//               {
+//                   dist.DistrictName,
+//                   state.StateName
+//               };
+//foreach(var item in studInfo)
+//{
+//    foreach(var data in item)
+//    {
+//        Console.WriteLine(data.StudentName + " | " + data.DistrictId + " | " + data.StateId);
+//    }
+//}
+
+
+//This is for displaying district name and state name 
+
+
+//var studData = from s in students
+//               join dist in districts
+//               on s.DistrictId equals dist.DistrictId
+//               join state in States
+//               on s.StateId equals state.StateId
+//               group s by new { dist.DistrictName, state.StateName };
+//foreach (var item in studData)
+//{
+//    var districtName = item.Key.DistrictName;
+//    var stateName = item.Key.StateName;
+//    foreach (var Idata in item)
+//    {
+//        Console.WriteLine(Idata.StudentName + "||" + districtName + " || " + stateName);
+//    }
+//}
+
+
+//--------------------------------------------------------------------------
+//9. Display unique Student Names
+
+//var studentNames = students.Select(x => x.StudentName).Distinct();
+//foreach (var student in studentNames)
+//{
+//    Console.WriteLine(student);
+//}
+
+
+
+//--------------------------------------------------------------------------
+//8.Display Taluka Information using join
+
+
+//var talukaInfo = (from student in students
+//                   join taluka in Talukas
+//                   on student.TalukaId equals taluka.TalukaId
+//                   select new
+//                   {
+//                       StudentId = student.StudentID,
+//                       StudentName = student.StudentName,
+//                       TalukaId=taluka.TalukaId,
+//                       TalukaName = taluka.TalukaName,
+//                   });
+//foreach (var data in talukaInfo)
+//{
+//    Console.WriteLine("Student Id : "+data.StudentId + "  | Student Name : " + data.StudentName +"     | Taluka Id :    " + data.TalukaId+ " | Taluka Name : " + data.TalukaName);
+//}
+
+
+//--------------------------------------------------------------------------
+//7.Display student Information whose id between 100 and 200
+
+//foreach (var student in students)
+//{
+//    if (student.StudentID >= 100 && student.StudentID <=200)
+//    {
+//        Console.WriteLine("Student Id : " + student.StudentID + " | Student Name : " + student.StudentName);
+//    }
+//}
+
+//Using LINQ 
+
+//var studentNames = students.Select(x => x.StudentID>=100 && x.StudentID <=200);
+//foreach (var student in studentNames)
+//{
+//    Console.WriteLine(student);
+//}
+
+
+
+//--------------------------------------------------------------------------
 //6.Display Student Information By using StudentId from user
+
+
+//Console.Write("Enter student Id : ");
+//var studId = int.Parse(Console.ReadLine());
+
+//foreach (var student in students)
+//{
+//    if (student.StudentID == studId)
+//    {
+//        Console.WriteLine("Student Id : "+student.StudentID + " | Student Name : " + student.StudentName );
+//    }
+//}
+
 
 
 //--------------------------------------------------------------------------
@@ -72,10 +179,35 @@ var students = FakeData.GetStudents();
 //-------------------------------------------------------
 //3.Display district Name where min number of students came from
 
+//This is perfect Solution for que 3
+
+//var data = from stud in students
+//           join dist in districts
+//           on stud.DistrictId equals dist.DistrictId
+//           group dist by dist //here we do group by using Objects 
+//            into g
+//           select new
+//           {
+//               DistrictName = g.Key.DistrictName, //here key meance object i.e. dist
+//               TotalCount = g.Count()
+//           };
+
+//var maxcount = data.Min(s => s.TotalCount);
+//var data2 = data.Where(s => s.TotalCount == maxcount);
+//Console.WriteLine("District Name");
+//foreach (var index in data2)
+//{
+//    Console.WriteLine(index.DistrictName + "|" + index.TotalCount);
+//}
+
+//-----------------------
+//This is my solution
+
 //var student = (from stud in students
 //               join state in States
 //               on stud.StateId equals state.StateId
 //               select state.StateName).Min();
+//Console.WriteLine(student.Count());
 //foreach (var item in student)
 //{
 //    Console.Write(item);
@@ -85,35 +217,61 @@ var students = FakeData.GetStudents();
 //------------------------------------------------------------------
 //2.Display State Name where max number of student came from
 
+//This is perfect Solution for que 2
+
+//var data = from stud in students
+//           join state in States
+//           on stud.StateId equals state.StateId
+//           group state by state //here we do group by using Objects 
+//            into g
+//           select new
+//           {
+//               StateName = g.Key.StateName, //here key meance object i.e. state
+//               TotalCount = g.Count()
+//           };
+
+
+//var maxcount = data.Max(s => s.TotalCount);
+//var data2 = data.Where(s => s.TotalCount == maxcount);
+//Console.WriteLine("State Name");
+//foreach (var index in data2)
+//{
+//    Console.WriteLine(index.StateName + "|" + index.TotalCount);
+//}
+
+//-----------------------
+
+//This is another solution for que 2 but it returns only 1 value because of FirstOrDefault() function
+
+//var groupjoin = (from state in States
+//                 join student in students
+//                 on state.StateId equals student.StateId
+//                 into studentGroup
+//                 orderby state.StateId
+//                 select new
+//                 {
+//                     students = studentGroup,
+//                     StateName = state.StateName,
+//                     Count = studentGroup.Count()
+//                 }).FirstOrDefault();
+//Console.WriteLine(groupjoin.Count);
+//Console.WriteLine("StateName:" + groupjoin.StateName);
+
+//-----------------------
+
+//This is my solution 
+
 //var student = (from stud in students
 //               join state in States
 //               on stud.StateId equals state.StateId
 //               select state.StateName).Max();
+//Console.WriteLine(student.Count());
 //foreach (var item in student)
 //{
 //    Console.Write(item);
 //}
 
 //--------------------------------------------------------------
-//var state = students.GroupBy(x => x.StateId);
-
-//foreach (var student in state)
-//{
-
-//    Console.WriteLine(student.Key);
-//    Console.WriteLine("-----------------------------------------------");
-//    var count = student.Count();
-
-
-//    Console.WriteLine("Count of Student " + count);
-//}
-
-
-//foreach (var s in student)
-//{
-//    var count = student.Max(x => x.StudentID);
-//    Console.WriteLine("Maximun count : " + count);
-//}
 
 
 //---------------------------------------------------------------
@@ -260,6 +418,9 @@ void TalukaWiseDisplay()
 
 
 
+
+//---------------------------------------------
+//Salim teaching Notes 
 
 //Console.WriteLine("Hello, World!");
 //string[] names = { "Bill", "StAve", "James", "Mohan" };
